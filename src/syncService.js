@@ -44,7 +44,13 @@ function ensureDataDir() {
 function loadState() {
   try {
     if (fs.existsSync(STATE_FILE)) {
-      Object.assign(state, JSON.parse(fs.readFileSync(STATE_FILE, 'utf8')));
+      const data = JSON.parse(fs.readFileSync(STATE_FILE, 'utf8'));
+      // Only keep the data we want to persist between environments
+      state.lastUrl       = data.lastUrl       || null;
+      state.lastCheckedAt = data.lastCheckedAt || null;
+      state.lastSyncedAt  = data.lastSyncedAt  || null;
+      // We don't restore 'localFile' from disk anymore, we use the constant LOCAL_FILE
+      state.localFile     = LOCAL_FILE;
     }
   } catch {
     console.warn('[sync] No se pudo leer sync-state.json — empezando desde cero.');
@@ -53,7 +59,14 @@ function loadState() {
 
 function saveState() {
   try {
-    fs.writeFileSync(STATE_FILE, JSON.stringify(state, null, 2), 'utf8');
+    // Only persist fields that are useful across environments
+    const toSave = {
+      lastUrl:       state.lastUrl,
+      lastCheckedAt: state.lastCheckedAt,
+      lastSyncedAt:  state.lastSyncedAt,
+      // We explicitly leave out absolute localFile path
+    };
+    fs.writeFileSync(STATE_FILE, JSON.stringify(toSave, null, 2), 'utf8');
   } catch (e) {
     console.error('[sync] Error guardando estado:', e.message);
   }
@@ -90,6 +103,7 @@ async function scrapeExcelUrl() {
 
 async function downloadExcel(url) {
   const response = await axios.get(url, {
+    chunked: true, // Allow large files
     responseType: 'arraybuffer',
     maxContentLength: MAX_BYTES,
     timeout: 30000,

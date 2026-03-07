@@ -4,3 +4,5 @@ node_modules/
 .vscode/sftp.json
 dist/
 data/subscriptions.json
+data/sync-state.json
+data/mapa-ayudas-vigente.xlsx
