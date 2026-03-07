@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+Disallow: /excel/
+Disallow: /data/
+
+Sitemap: https://isamart.es/mapa-ayudas/sitemap.xml
+
+# Crawl-delay for polite bots
+Crawl-delay: 10
