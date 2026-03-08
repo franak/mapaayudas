@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ayuda y Tutorial | Mapa de Ayudas ISAMART</title>
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --navy: #2c3e50;
+            --navy-dk: #1a252f;
+            --orange: #e67e22;
+            --white: #ffffff;
+            --off-white: #f8f9fa;
+            --text: #2c3e50;
+            --text-muted: #7f8c8d;
+            --radius: 8px;
+            --shadow: 0 4px 12px rgba(44,62,80,0.1);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Open Sans', sans-serif;
+            background-color: var(--off-white);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        .header {
+            background: var(--navy);
+            padding: 1.5rem 2rem;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo-wrap { display: flex; align-items: center; gap: 1rem; text-decoration: none; color: white; }
+        .logo-box { background: var(--orange); width: 40px; height: 40px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-weight: 800; font-family: 'Raleway'; }
+        .logo-text { font-family: 'Raleway'; font-weight: 700; letter-spacing: 0.05em; }
+        .logo-text span { color: var(--orange); }
+
+        .btn-back {
+            background: rgba(255,255,255,0.1);
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            transition: background 0.2s;
+        }
+        .btn-back:hover { background: rgba(255,255,255,0.2); }
+
+        .container {
+            max-width: 900px;
+            margin: 3rem auto;
+            padding: 0 2rem;
+        }
+
+        .hero { text-align: center; margin-bottom: 4rem; }
+        .hero h1 { font-family: 'Raleway'; font-size: 2.5rem; color: var(--navy); margin-bottom: 1rem; }
+        .hero p { font-size: 1.1rem; color: var(--text-muted); max-width: 600px; margin: 0 auto; }
+
+        .guide-section {
+            background: white;
+            padding: 2.5rem;
+            border-radius: var(--radius);
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow);
+            border-left: 5px solid var(--orange);
+        }
+
+        .guide-section h2 {
+            font-family: 'Raleway';
+            color: var(--navy);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .icon { font-size: 1.5rem; }
+
+        .guide-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 1rem;
+        }
+
+        .guide-item h3 { font-size: 1.1rem; margin-bottom: 0.5rem; color: var(--navy-dk); }
+        .guide-item p { font-size: 0.95rem; color: var(--text-muted); }
+
+        .visual-aid {
+            background: #f0f4f8;
+            padding: 1rem;
+            border-radius: 6px;
+            margin: 1rem 0;
+            border: 1px dashed var(--navy);
+            font-family: monospace;
+            font-size: 0.85rem;
+            color: var(--navy);
+        }
+
+        footer {
+            background: var(--navy-dk);
+            color: rgba(255,255,255,0.5);
+            padding: 3rem 2rem;
+            text-align: center;
+            margin-top: 5rem;
+        }
+        footer a { color: var(--orange); text-decoration: none; }
+
+        @media (max-width: 600px) {
+            .hero h1 { font-size: 1.8rem; }
+            .guide-section { padding: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="header">
+        <a href="/" class="logo-wrap">
+            <div class="logo-box">IS</div>
+            <div class="logo-text">I <span>S</span> A M A R T</div>
+        </a>
+        <a href="/" class="btn-back">← Volver al Mapa</a>
+    </header>
+
+    <div class="container">
+        <div class="hero">
+            <h1>Guía de Uso</h1>
+            <p>Descubre cómo navegar y sacar el máximo partido al Mapa de Ayudas a la Rehabilitación Energética de la Comunidad de Madrid.</p>
+        </div>
+
+        <section class="guide-section">
+            <h2><span class="icon">🔍</span> ¿Qué es esta herramienta?</h2>
+            <p>El Mapa de Ayudas es un visor interactivo que centraliza todas las convocatorias vigentes de subvenciones para rehabilitación. Los datos se sincronizan automáticamente con la <strong>Oficina de Rehabilitación del COAM</strong>, asegurando que siempre veas la información más reciente.</p>
+        </section>
+
+        <section class="guide-section">
+            <h2><span class="icon">📊</span> Navegación y Datos</h2>
+            <div class="guide-grid">
+                <div class="guide-item">
+                    <h3>Cambio de Hoja</h3>
+                    <p>Utiliza el selector de "Hoja" en la parte superior para navegar entre las diferentes categorías del Excel original (ej. GENERAL, fondos específicos, etc.).</p>
+                </div>
+                <div class="guide-item">
+                    <h3>Búsqueda Rápida</h3>
+                    <p>Escribe cualquier término en el buscador. El sistema filtrará instantáneamente por nombre de ayuda, organismo o descripción.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="guide-section">
+            <h2><span class="icon">⚙️</span> Filtros Avanzados</h2>
+            <p>Para búsquedas más precisas, utiliza el botón de <strong>Filtros</strong>. Podrás segmentar por:</p>
+            <ul style="margin-left: 1.5rem; margin-top: 1rem; color: var(--text-muted);">
+                <li><strong>Organismo:</strong> Ayuntamientos, Ministerio, Comunidad de Madrid, etc.</li>
+                <li><strong>Ámbito Geográfico:</strong> Nacional, regional o municipal.</li>
+                <li><strong>Tipología:</strong> Vivienda unifamiliar, bloque de viviendas, terciario, etc.</li>
+                <li><strong>Estado:</strong> Solo convocatorias abiertas o cerradas.</li>
+            </ul>
+        </section>
+
+        <section class="guide-section">
+            <h2><span class="icon">✉️</span> Alertas y Suscripciones</h2>
+            <p>No pierdas ninguna oportunidad. Haz clic en el botón <strong>Suscribirse a Alertas</strong> para dejar tu email.</p>
+            <div class="visual-aid">
+                Te enviaremos un correo automático CADA VEZ que detectemos un cambio o actualización en el archivo oficial del COAM.
+            </div>
+        </section>
+
+        <section class="guide-section">
+            <h2><span class="icon">📩</span> Solicitar Información</h2>
+            <p>Si alguna ayuda te interesa pero tienes dudas sobre los requisitos o cómo tramitarla, utiliza el botón <strong>"Solicitar info"</strong> que aparece en cada fila de la tabla.</p>
+            <p style="margin-top: 0.5rem;">Nuestro equipo de ISAMART recibirá tu consulta vinculada a esa convocatoria específica y te asesorará sin compromiso.</p>
+        </section>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 REHABILITACION ENERGETICA I S A M A R T, SL</p>
+        <p><a href="https://isamart.es">www.isamart.es</a> | <a href="mailto:contacto@isamart.es">contacto@isamart.es</a></p>
+    </footer>
+
+</body>
+</html>
