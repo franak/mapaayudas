@@ -1974,7 +1974,24 @@
       }
 
       .site-header {
-        padding: .6rem 1rem
+        padding: .6rem 1rem;
+        flex-wrap: wrap;
+        gap: .75rem;
+      }
+
+      .header-actions {
+        width: 100%;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: .5rem;
+      }
+
+      .header-actions>* {
+        flex: 1 1 calc(50% - .25rem);
+        padding: .35rem .2rem;
+        font-size: .7rem;
+        text-align: center;
+        white-space: normal;
       }
 
       .hero-strip,
