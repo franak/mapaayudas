@@ -9,6 +9,7 @@ const { cache, buildKey, CACHE_TTL } = require('./cache');
 const { sync, getLocalFilePath, getState } = require('./syncService');
 const { sync: syncPlanRec, getCachedData: getPlanRecData, getState: getPlanRecState } = require('./scrapePlanRecuperacionService');
 const { fetchFeed: fetchBdns, getCachedData: getBdnsData, getState: getBdnsState } = require('./bdnsService');
+const { fetchOpen: fetchBdnsApi, getCachedData: getBdnsApiData, getState: getBdnsApiState } = require('./bdnsApiService');
 const { add: addSubscriber, confirm: confirmSubscriber } = require('./subscriptionService');
 const { sendWelcomeEmail, sendNewSubscriberAlert, sendInfoRequestToAdmin, sendInfoRequestAck } = require('./emailService');
 
@@ -351,6 +352,36 @@ function statusMeta() {
   const sourceUrl = sCoam.lastUrl || sPr.sourcePage || sPr.urlSource || (sBdns && sBdns.feedUrl) || null;
   return { sourceUrl, lastSyncedAt, lastCheckedAt };
 }
+
+// ─────────────────────────────────────────────────────────────────
+// GET /excel/bdns-api  → usar BDNS API (documented) para obtener subvenciones abiertas
+// ─────────────────────────────────────────────────────────────────
+router.get('/bdns-api', async (req, res, next) => {
+  try {
+    const data = getBdnsApiData();
+    const s = getBdnsApiState();
+    if (!data || data.length === 0) {
+      return res.status(204).json({ message: 'No BDNS API data cached. Call POST /excel/bdns-api/sync to fetch.', searchUrl: s?.searchUrl || null });
+    }
+    res.json({ available: true, rows: data.length, items: data, searchUrl: s?.searchUrl || null });
+  } catch (err) {
+    next(err);
+  }
+});
+
+// ─────────────────────────────────────────────────────────────────
+// POST /excel/bdns-api/sync  → forzar fetch desde BDNS API
+// ─────────────────────────────────────────────────────────────────
+router.post('/bdns-api/sync', async (req, res, next) => {
+  try {
+    const force = req.query.force === 'true';
+    const result = await fetchBdnsApi(force);
+    cache.flushAll();
+    res.json({ ok: true, result });
+  } catch (err) {
+    next(err);
+  }
+});
 
 // ─────────────────────────────────────────────────────────────────
 // POST /excel/subscribe  →  registrar suscripción + enviar bienvenida
