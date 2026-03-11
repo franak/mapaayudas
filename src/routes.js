@@ -305,10 +305,11 @@ router.delete('/cache', (_req, res) => {
 router.get('/bdns', (_req, res, next) => {
   try {
     const data = getBdnsData();
+    const s = getBdnsState();
     if (!data || data.length === 0) {
-      return res.status(204).json({ message: 'No BDNS data cached. Call POST /excel/bdns/sync to fetch.' });
+      return res.status(204).json({ message: 'No BDNS data cached. Call POST /excel/bdns/sync to fetch.', feedUrl: s?.feedUrl || null });
     }
-    res.json({ available: true, rows: data.length, items: data });
+    res.json({ available: true, rows: data.length, items: data, feedUrl: s?.feedUrl || null });
   } catch (err) {
     next(err);
   }

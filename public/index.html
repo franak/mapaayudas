@@ -2918,6 +2918,18 @@
           } else if (r.ok) {
             const j = await r.json();
             document.getElementById('iBdns').textContent = j.rows != null ? `${j.rows} items` : '—';
+            // If feedUrl available, append link to Fuentes
+            if (j.feedUrl) {
+              try {
+                const srcEl = document.getElementById('iSources');
+                const existing = srcEl.innerHTML || '';
+                const bdnsLink = `<a href="${j.feedUrl}" target="_blank" rel="noopener">PRTR(ATOM)</a>${j.rows != null ? ` (${j.rows})` : ''}`;
+                // Avoid duplicating if already present
+                if (!existing.includes('PRTR(ATOM)')) {
+                  srcEl.innerHTML = existing ? `${existing} · ${bdnsLink}` : bdnsLink;
+                }
+              } catch (e) { /* ignore */ }
+            }
           } else {
             document.getElementById('iBdns').textContent = '—';
           }
