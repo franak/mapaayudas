@@ -8,6 +8,7 @@ const {
 const { cache, buildKey, CACHE_TTL } = require('./cache');
 const { sync, getLocalFilePath, getState } = require('./syncService');
 const { sync: syncPlanRec, getCachedData: getPlanRecData, getState: getPlanRecState } = require('./scrapePlanRecuperacionService');
+const { fetchFeed: fetchBdns, getCachedData: getBdnsData, getState: getBdnsState } = require('./bdnsService');
 const { add: addSubscriber, confirm: confirmSubscriber } = require('./subscriptionService');
 const { sendWelcomeEmail, sendNewSubscriberAlert, sendInfoRequestToAdmin, sendInfoRequestAck } = require('./emailService');
 
@@ -298,10 +299,42 @@ router.delete('/cache', (_req, res) => {
   res.json({ message: 'Cache cleared', deletedKeys: keys.length });
 });
 
+// ─────────────────────────────────────────────────────────────────
+// GET /excel/bdns  →  devolver items cacheados del feed BDNS (PRTR(ATOM))
+// ─────────────────────────────────────────────────────────────────
+router.get('/bdns', (_req, res, next) => {
+  try {
+    const data = getBdnsData();
+    if (!data || data.length === 0) {
+      return res.status(204).json({ message: 'No BDNS data cached. Call POST /excel/bdns/sync to fetch.' });
+    }
+    res.json({ available: true, rows: data.length, items: data });
+  } catch (err) {
+    next(err);
+  }
+});
+
+// ─────────────────────────────────────────────────────────────────
+// POST /excel/bdns/sync  →  forzar fetch del feed BDNS
+// Query: ?force=true
+// ─────────────────────────────────────────────────────────────────
+router.post('/bdns/sync', async (req, res, next) => {
+  try {
+    const force = req.query.force === 'true';
+    const result = await fetchBdns(undefined, force);
+    // Invalidate in-memory cache if needed
+    cache.flushAll();
+    res.json({ ok: true, result });
+  } catch (err) {
+    next(err);
+  }
+});
+
 // ─── Helper ───────────────────────────────────────────────────────
 function statusMeta() {
   const sCoam = getState();
   const sPr = (typeof getPlanRecState === 'function') ? getPlanRecState() : {};
+  const sBdns = (typeof getBdnsState === 'function') ? getBdnsState() : {};
   // Choose the most recent non-null timestamps between sources
   const pickLatest = (a, b) => {
     if (!a && !b) return null;
@@ -309,9 +342,12 @@ function statusMeta() {
     if (!b) return a;
     return a > b ? a : b;
   };
-  const lastSyncedAt = pickLatest(sCoam.lastSyncedAt, sPr.lastSyncedAt);
-  const lastCheckedAt = pickLatest(sCoam.lastCheckedAt, sPr.lastCheckedAt);
-  const sourceUrl = sCoam.lastUrl || sPr.sourcePage || sPr.urlSource || null;
+  // include BDNS state when choosing latest timestamps
+  const tmpSynced = pickLatest(sCoam.lastSyncedAt, sPr.lastSyncedAt);
+  const lastSyncedAt = pickLatest(tmpSynced, sBdns.lastSyncedAt);
+  const tmpChecked = pickLatest(sCoam.lastCheckedAt, sPr.lastCheckedAt);
+  const lastCheckedAt = pickLatest(tmpChecked, sBdns.lastCheckedAt);
+  const sourceUrl = sCoam.lastUrl || sPr.sourcePage || sPr.urlSource || (sBdns && sBdns.feedUrl) || null;
   return { sourceUrl, lastSyncedAt, lastCheckedAt };
 }
 
