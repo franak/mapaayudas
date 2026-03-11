@@ -1168,7 +1168,7 @@
 
     .table td {
       padding: 0.6rem 0.5rem;
-      vertical-align: top;
+      vertical-align: middle;
       line-height: 1.4;
       white-space: pre-wrap;
       word-break: break-word;
@@ -1303,20 +1303,42 @@
       width: 28px;
       height: 28px;
       border-radius: 4px;
-      border: 1px solid rgba(44,62,80,.06);
-      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(44, 62, 80, .06);
+      background: rgba(255, 255, 255, 0.03);
       cursor: pointer;
       font-size: 14px;
       padding: 0;
       color: var(--navy);
     }
-    .expiry-cell .calendar-btn:hover { background: var(--orange); color: #fff; border-color: var(--orange) }
+
+    .expiry-cell .calendar-btn:hover {
+      background: var(--orange);
+      color: #fff;
+      border-color: var(--orange)
+    }
 
     .calendar-btn-small {
-      display:inline-flex; align-items:center; justify-content:center; width:22px; height:22px; font-size:12px; padding:0; margin-left:6px; border-radius:4px; border:1px solid rgba(44,62,80,.06); background:transparent; cursor:pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 22px;
+      height: 22px;
+      font-size: 12px;
+      padding: 0;
+      margin-left: 6px;
+      border-radius: 4px;
+      border: 1px solid rgba(44, 62, 80, .06);
+      background: transparent;
+      cursor: pointer;
     }
+
     /* Normalize table & card typography */
-    .table, .table th, .table td, .mobile-card, .card-title, .card-value {
+    .table,
+    .table th,
+    .table td,
+    .mobile-card,
+    .card-title,
+    .card-value {
       font-family: var(--font-body);
       font-size: .85rem;
     }
@@ -2160,18 +2182,10 @@
             class="fresh-dot"></span>Actualizado recientemente</span>
       </div>
       <div class="info-rows">
-        <div class="info-row"><span class="info-key">Archivo</span><span class="info-val loading"
-            id="iFilename">Cargando…</span></div>
-        <div class="info-row"><span class="info-key">Descargado</span><span class="info-val" id="iSynced">—</span></div>
-        <div class="info-row"><span class="info-key">Comprobado</span><span class="info-val" id="iChecked">—</span>
+        <div class="info-row"><span class="info-key">Última descarga</span><span class="info-val" id="iSynced">—</span>
         </div>
-        <div class="info-row"><span class="info-key">Registros</span><span class="info-val" id="iTotal">—</span></div>
-        <div class="info-row"><span class="info-key">Registros</span><span class="info-val" id="iTotal">—</span></div>
-        <div class="info-row"><span class="info-key">Fuente origen</span><span class="info-val" id="iSourceUrl">—</span></div>
-        <div class="info-row"><span class="info-key">Última descarga</span><span class="info-val" id="iSynced">—</span></div>
-        <div class="info-row"><span class="info-key">Última comprobación</span><span class="info-val" id="iChecked">—</span></div>
         <div class="info-row"><span class="info-key">Fuentes</span><span class="info-val" id="iSources">—</span></div>
-        <div class="info-row"><span class="info-key">Cache</span><span class="info-val" id="iCache">—</span></div>
+        <div class="info-row"><span class="info-key">Registros</span><span class="info-val" id="iTotal">—</span></div>
       </div>
     </div>
 
@@ -2737,7 +2751,7 @@
         <div class="card-field">
           <span class="card-label">Hasta</span>
           <span class="card-value">${row['PLAZOS > HASTA'] ? fmtDate(row['PLAZOS > HASTA']) : '—'}</span>
-          ${row['PLAZOS > HASTA'] ? `<button class="calendar-btn-small" title="Añadir a calendario" onclick="event.stopPropagation(); downloadICS(${JSON.stringify({titulo: t, fechaHasta: row['PLAZOS > HASTA'], enlace: docUrl, objeto: row['OBJETO / LÍNEA DE ACTUACIÓN'] || ''}).replace(/"/g,'&quot;')})">📅</button>` : ''}
+          ${row['PLAZOS > HASTA'] ? `<button class="calendar-btn-small" title="Añadir a calendario" onclick="event.stopPropagation(); downloadICS(${JSON.stringify({ titulo: t, fechaHasta: row['PLAZOS > HASTA'], enlace: docUrl, objeto: row['OBJETO / LÍNEA DE ACTUACIÓN'] || '' }).replace(/"/g, '&quot;')})">📅</button>` : ''}
         </div>
         <div class="card-field">
           <span class="card-label">Ámbito</span>
@@ -2793,7 +2807,7 @@
         case 'expiry': {
           if (!v) return `<td class="td-mono">—</td>`;
           const d = v.substring(0, 10), soon = d >= TODAY && d <= SOON_DATE, days = daysUntil(d);
-          const cal = JSON.stringify({titulo: row['TÍTULO DE LA CONVOCATORIA'] || row['OBJETO / LÍNEA DE ACTUACIÓN'] || 'Convocatoria', fechaHasta: d, enlace: row['ACCESO A LA CONVOCATORIA'] || '', objeto: row['OBJETO / LÍNEA DE ACTUACIÓN'] || ''}).replace(/"/g, '&quot;');
+          const cal = JSON.stringify({ titulo: row['TÍTULO DE LA CONVOCATORIA'] || row['OBJETO / LÍNEA DE ACTUACIÓN'] || 'Convocatoria', fechaHasta: d, enlace: row['ACCESO A LA CONVOCATORIA'] || '', objeto: row['OBJETO / LÍNEA DE ACTUACIÓN'] || '' }).replace(/"/g, '&quot;');
           return `<td class="td-mono"><div class="expiry-cell">${fmtDate(v)}${soon ? `<span class="expiry-warn" aria-label="${days} días para vencer">⚠ ${days}d</span>` : ''}<button class="calendar-btn" title="Añadir a calendario" onclick="event.stopPropagation(); downloadICS(${cal})">📅</button></div></td>`
         }
         case 'trunc':
@@ -2804,12 +2818,12 @@
               ambito: (row['DELIMITACIÓN GEOGRÁFICA'] || '').replace(/^\d+_/, ''),
               normativa: row['NORMATIVA MARCO'] || ''
             };
-            return `<td style="font-weight:600;vertical-align:top;text-align:left;font-size:.85rem;line-height:1.4">
+            return `<td style="font-weight:600;vertical-align:middle;text-align:left;font-size:.85rem;line-height:1.4">
           <div style="margin-bottom:4px">${hi(val, search)}</div>
           <button class="btn-info-row" style="font-size:.65rem;padding:.15rem .5rem" onclick="event.stopPropagation();openInfoModal(${JSON.stringify(convData).replace(/"/g, '&quot;')},'row')">📩 Solicitar info</button>
         </td>`;
           }
-          return `<td style="vertical-align:top;text-align:left">${hi(v, search)}</td>`
+          return `<td style="vertical-align:middle;text-align:left">${hi(v, search)}</td>`
         default: return `<td>${hi(v, search)}</td>`
       }
     }
@@ -2870,26 +2884,15 @@
 
     // ── Info panel ────────────────────────────────────────────────────
     function updateInfoPanel(json, totalRows) {
-      const url = json.sourceUrl || '', fn = url.split('/').pop() || '—';
-      const el = document.getElementById('iFilename'); el.textContent = fn; el.classList.remove('loading');
       const sd = json.lastSyncedAt ? new Date(json.lastSyncedAt) : null;
-      const cd = json.lastCheckedAt ? new Date(json.lastCheckedAt) : null;
       document.getElementById('iSynced').innerHTML = sd ? fmtDateAge(sd) : '—';
-      document.getElementById('iChecked').innerHTML = cd ? fmtDateAge(cd) : '—';
       document.getElementById('iTotal').textContent = totalRows != null ? `${totalRows} filas` : '—';
-      document.getElementById('iSourceUrl').innerHTML = url ? `<a href="${url}" target="_blank" rel="noopener">${fn}</a>` : '—';
-      document.getElementById('iCache').textContent = json.cacheTtlSeconds ? `${json.cacheTtlSeconds}s` : '—';
-      const ageH = sd ? (Date.now() - sd.getTime()) / 36e5 : Infinity;
-      const fresh = ageH < 24;
-      document.getElementById('infoPanel').classList.toggle('fresh', fresh);
-      document.getElementById('freshBadge').style.display = fresh ? 'inline-flex' : 'none';
-      if (fresh) toast(`Archivo actualizado hace ${ageH < 1 ? 'menos de 1h' : Math.floor(ageH) + 'h'}`, 'ok', 4000);
 
-      // Populate sources information (availability and rows)
+      // Populate sources (COAM / PRTR) succinctly
       try {
         const srcEl = document.getElementById('iSources');
         if (json.sources && typeof json.sources === 'object') {
-          const links = { coam: 'https://oficinarehabilitacion.coam.org/oficina-rehabilitacion-ayudas-mapa-ayudas-vigente/', planRecuperacion: 'https://planderecuperacion.gob.es/', planRecuperacion: 'https://planderecuperacion.gob.es/' };
+          const links = { coam: 'https://oficinarehabilitacion.coam.org/oficina-rehabilitacion-ayudas-mapa-ayudas-vigente/', 'plan-recuperacion': 'https://planderecuperacion.gob.es/' };
           const parts = [];
           Object.keys(json.sources).forEach(k => {
             const s = json.sources[k];
@@ -2897,14 +2900,20 @@
             const label = keyLower === 'coam' ? 'COAM' : (keyLower.includes('recuper') ? 'PRTR' : k);
             const count = s.rows != null ? ` (${s.rows})` : '';
             const href = links[k] || links[keyLower] || '#';
-            const avail = s.available === false ? ' (no disponible)' : '';
-            parts.push(`<a href="${href}" target="_blank" rel="noopener">${label}</a>${count}${avail}`);
+            parts.push(`<a href="${href}" target="_blank" rel="noopener">${label}</a>${count}`);
           });
           srcEl.innerHTML = parts.join(' · ');
         } else {
           document.getElementById('iSources').textContent = '—';
         }
-      } catch (e) { }
+      } catch (e) { document.getElementById('iSources').textContent = '—'; }
+
+      // Freshness indicator (keep behaviour)
+      const ageH = sd ? (Date.now() - sd.getTime()) / 36e5 : Infinity;
+      const fresh = ageH < 24;
+      document.getElementById('infoPanel').classList.toggle('fresh', fresh);
+      document.getElementById('freshBadge').style.display = fresh ? 'inline-flex' : 'none';
+      if (fresh) toast(`Archivo actualizado hace ${ageH < 1 ? 'menos de 1h' : Math.floor(ageH) + 'h'}`, 'ok', 4000);
     }
     function fmtDateAge(date) {
       const d = date.getDate().toString().padStart(2, '0'), m = (date.getMonth() + 1).toString().padStart(2, '0'), y = date.getFullYear().toString().substring(2);
@@ -2938,7 +2947,7 @@
         function ymd(d) { return d.getFullYear().toString() + String(d.getMonth() + 1).padStart(2, '0') + String(d.getDate()).padStart(2, '0') }
         const uid = 'mapa-ayudas-' + Math.random().toString(36).slice(2) + '@isamart.es';
         const now = new Date();
-        const dtstamp = now.getUTCFullYear().toString() + String(now.getUTCMonth() + 1).padStart(2, '0') + String(now.getUTCDate()).padStart(2, '0') + 'T' + String(now.getUTCHours()).padStart(2,'0') + String(now.getUTCMinutes()).padStart(2,'0') + String(now.getUTCSeconds()).padStart(2,'0') + 'Z';
+        const dtstamp = now.getUTCFullYear().toString() + String(now.getUTCMonth() + 1).padStart(2, '0') + String(now.getUTCDate()).padStart(2, '0') + 'T' + String(now.getUTCHours()).padStart(2, '0') + String(now.getUTCMinutes()).padStart(2, '0') + String(now.getUTCSeconds()).padStart(2, '0') + 'Z';
         const desc = escapeICSText((data.objeto || '') + (data.enlace ? '\n' + data.enlace : ''));
         const ics = [
           'BEGIN:VCALENDAR',
@@ -2958,7 +2967,7 @@
         const blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
-        a.href = url; a.download = `${(title||'convocatoria').replace(/[^a-z0-9_-]/gi,'_')}_hasta_${dateStr}.ics`;
+        a.href = url; a.download = `${(title || 'convocatoria').replace(/[^a-z0-9_-]/gi, '_')}_hasta_${dateStr}.ics`;
         document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
         toast('Archivo .ics generado', 'ok', 1800);
       } catch (e) { toast('Error generando .ics', 'error'); }

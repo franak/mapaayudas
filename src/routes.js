@@ -281,6 +281,8 @@ router.get('/', async (req, res, next) => {
       }
     }
 
+    // Add global status metadata (última descarga/comprobación, URL fuente)
+    Object.assign(result, statusMeta());
     res.json(result);
   } catch (err) {
     next(err);
@@ -298,12 +300,19 @@ router.delete('/cache', (_req, res) => {
 
 // ─── Helper ───────────────────────────────────────────────────────
 function statusMeta() {
-  const s = getState();
-  return {
-    sourceUrl: s.lastUrl,
-    lastSyncedAt: s.lastSyncedAt,
-    lastCheckedAt: s.lastCheckedAt,
+  const sCoam = getState();
+  const sPr = (typeof getPlanRecState === 'function') ? getPlanRecState() : {};
+  // Choose the most recent non-null timestamps between sources
+  const pickLatest = (a, b) => {
+    if (!a && !b) return null;
+    if (!a) return b;
+    if (!b) return a;
+    return a > b ? a : b;
   };
+  const lastSyncedAt = pickLatest(sCoam.lastSyncedAt, sPr.lastSyncedAt);
+  const lastCheckedAt = pickLatest(sCoam.lastCheckedAt, sPr.lastCheckedAt);
+  const sourceUrl = sCoam.lastUrl || sPr.sourcePage || sPr.urlSource || null;
+  return { sourceUrl, lastSyncedAt, lastCheckedAt };
 }
 
 // ─────────────────────────────────────────────────────────────────
