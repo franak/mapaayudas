@@ -1182,7 +1182,8 @@
 
     td.td-mono {
       font-family: var(--font-mono);
-      font-size: .68rem
+      font-size: .75rem;
+      color: var(--navy-dk);
     }
 
     td.cell-trunc {
@@ -1246,6 +1247,16 @@
     .badge-cerrada {
       background: var(--red-lt);
       color: var(--red)
+    }
+
+    .badge-source-coam {
+      background: #d6eaf8;
+      color: #1a5276
+    }
+
+    .badge-source-prtr {
+      background: #fef5e7;
+      color: #7d6608
     }
 
     .badge-geo {
@@ -1596,10 +1607,10 @@
 
     .footer-brand p {
       font-size: .75rem;
-      color: rgba(255, 255, 255, .5);
+      color: rgba(255, 255, 255, .85);
       margin-top: .35rem;
       line-height: 1.6;
-      max-width: 220px
+      max-width: 240px
     }
 
     .footer-col h4 {
@@ -1615,7 +1626,7 @@
     .footer-col a {
       display: block;
       font-size: .73rem;
-      color: rgba(255, 255, 255, .5);
+      color: rgba(255, 255, 255, .85);
       text-decoration: none;
       margin-bottom: .3rem;
       transition: color .15s
@@ -2130,9 +2141,10 @@
         <div class="info-row"><span class="info-key">Comprobado</span><span class="info-val" id="iChecked">—</span>
         </div>
         <div class="info-row"><span class="info-key">Registros</span><span class="info-val" id="iTotal">—</span></div>
-        <div class="info-row"><span class="info-key">Fuente</span><span class="info-val"><a
+        <div class="info-row"><span class="info-key">Fuentes</span><span class="info-val"><a
               href="https://oficinarehabilitacion.coam.org/oficina-rehabilitacion-ayudas-mapa-ayudas-vigente/"
-              target="_blank" rel="noopener">Oficina COAM ↗</a></span></div>
+              target="_blank" rel="noopener">Oficina COAM ↗</a> · <a href="https://planderecuperacion.gob.es/"
+              target="_blank" rel="noopener">Plan de Recuperación (PRTR) ↗</a></span></div>
       </div>
     </div>
 
@@ -2146,15 +2158,12 @@
   </section>
 
   <!-- ════════════════════ CONFIG BAR ════════════════════ -->
-  <div class="config-bar" role="toolbar" aria-label="Configuración de hoja">
-    <label for="sheetSelect">Hoja</label>
-    <select id="sheetSelect" onchange="loadData()" aria-label="Seleccionar hoja Excel">
-      <option value="GENERAL">GENERAL</option>
-    </select>
+  <div class="config-bar" role="toolbar" aria-label="Configuración">
     <button class="btn-load" id="btnLoad" onclick="loadData()" aria-label="Cargar datos">▶ Cargar</button>
-    <span class="config-note">Fuente: <a
+    <span class="config-note">Fuentes: <a
         href="https://oficinarehabilitacion.coam.org/oficina-rehabilitacion-ayudas-mapa-ayudas-vigente/" target="_blank"
-        rel="noopener">Oficina Rehabilitación COAM</a></span>
+        rel="noopener">Oficina COAM</a> · <a href="https://planderecuperacion.gob.es/" target="_blank"
+        rel="noopener">Plan de Recuperación (PRTR)</a></span>
   </div>
 
   <!-- ════════════════════ TOOLBAR ════════════════════ -->
@@ -2169,8 +2178,6 @@
         oninput="applyAndRender(true)" disabled aria-label="Buscar en todos los campos">
     </div>
     <div class="filter-chips" role="group" aria-label="Filtros rápidos de estado">
-      <span class="chip chip-activas disabled" id="chipActivas" onclick="toggleActivas()" role="button" tabindex="0"
-        aria-pressed="false" title="Fecha hasta ≥ hoy">◆ Activas hoy</span>
       <span class="chip chip-abierta disabled" id="chipAbierta" onclick="toggleChip('Abierta')" role="button"
         tabindex="0" aria-pressed="false">● Abierta</span>
       <span class="chip chip-cerrada disabled" id="chipCerrada" onclick="toggleChip('Cerrada')" role="button"
@@ -2191,6 +2198,12 @@
     <div class="filter-group"><label for="fOrganismo">Organismo</label><select id="fOrganismo"
         onchange="applyAndRender()" disabled aria-label="Filtrar por organismo">
         <option value="">Todos</option>
+      </select></div>
+    <div class="filter-group"><label for="fSource">Origen</label><select id="fSource" onchange="applyAndRender()"
+        disabled aria-label="Filtrar por origen">
+        <option value="">Todos</option>
+        <option value="coam">COAM</option>
+        <option value="plan-recuperacion">PRTR</option>
       </select></div>
     <div class="filter-group"><label for="fGeo">Ámbito geográfico</label><select id="fGeo" onchange="applyAndRender()"
         disabled aria-label="Filtrar por ámbito geográfico">
@@ -2235,41 +2248,36 @@
   <!-- Back to Top -->
   <button id="backToTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Volver arriba">↑</button>
 
-  <!-- ════════════════════ FOOTER ════════════════════ -->
   <footer role="contentinfo">
     <div class="footer-top">
       <div class="footer-brand">
         <div class="logo-name">I <span>S</span> A M A R T</div>
         <p>Gestión integral de proyectos de rehabilitación energética en la Comunidad de Madrid.</p>
-        <p style="margin-top:.5rem">NIF: B56558869<br>Tel: <a href="tel:+34615469845"
-            style="color:rgba(255,255,255,.5)">615 469 845</a></p>
+        <p style="margin-top:.5rem">NIF: B56558869<br>
+          Tel: <a href="tel:+34615469845" style="color:rgba(255,255,255,.9); font-weight: 500;">615 469 845</a><br>
+          Web: <a href="https://isamart.es" target="_blank" rel="noopener"
+            style="color:rgba(255,255,255,.9); font-weight: 500;">isamart.es</a></p>
       </div>
-      <div class="footer-col">
-        <h4>Contacto</h4>
-        <a href="#" onclick="openInfoModal(null,'footer-contact');return false;">📩 Solicitar información</a>
-        <a href="tel:+34615469845">615 469 845</a>
-        <a href="https://isamart.es" target="_blank" rel="noopener">isamart.es</a>
-      </div>
-      <div class="footer-col">
+      <div class="footer-col" style="flex:1; min-width:160px;">
         <h4>Herramienta</h4>
+        <a href="#" onclick="openInfoModal(null,'footer-contact');return false;">📩 Solicitar información general</a>
         <a href="https://oficinarehabilitacion.coam.org/oficina-rehabilitacion-ayudas-mapa-ayudas-vigente/"
-          target="_blank" rel="noopener">Fuente: Oficina COAM</a>
+          target="_blank" rel="noopener">Fuente de datos: Oficina COAM</a>
         <a href="#" onclick="openModal();return false">Suscribirse a alertas</a>
-        <a href="#" onclick="openInfoModal(null,'footer');return false">Solicitar información</a>
       </div>
-      <div class="footer-col">
+      <div class="footer-col" style="flex:1; min-width:160px;">
         <h4>Legal</h4>
         <a href="/legal/aviso-legal.html">Aviso Legal</a>
         <a href="/legal/privacidad.html">Política de Privacidad</a>
         <a href="/legal/cookies.html">Política de Cookies</a>
       </div>
     </div>
-    <div class="footer-bottom">
+    <div class="footer-bottom" style="color: rgba(255,255,255,.85);">
       <span>© 2025 REHABILITACION ENERGETICA I S A M A R T, SL · Todos los derechos reservados</span>
       <div class="footer-legal">
-        <a href="/legal/aviso-legal.html">Aviso Legal</a>
-        <a href="/legal/privacidad.html">Política de Privacidad</a>
-        <a href="/legal/cookies.html">Política de Cookies</a>
+        <a href="/legal/aviso-legal.html" style="color: rgba(255,255,255,.85);">Aviso Legal</a>
+        <a href="/legal/privacidad.html" style="color: rgba(255,255,255,.85);">Política de Privacidad</a>
+        <a href="/legal/cookies.html" style="color: rgba(255,255,255,.85);">Política de Cookies</a>
       </div>
       <div class="pagination" id="pagination" role="navigation" aria-label="Paginación"></div>
     </div>
@@ -2409,7 +2417,6 @@
   <!-- ════════════════════════════════════════════════════════════
      JAVASCRIPT
 ════════════════════════════════════════════════════════════ -->
-  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
   <script>
     'use strict';
 
@@ -2420,6 +2427,7 @@
     const SOON_DATE = (() => { const d = new Date(); d.setDate(d.getDate() + SOON_DAYS); return d.toISOString().substring(0, 10); })();
 
     const COL_CONFIG = {
+      '_source': { label: 'Origen', w: 90, r: 'source' },
       'ORIGEN > ORGANISMO': { label: 'Organismo', w: 155 },
       'ORIGEN > FONDO': { label: 'Fondo', w: 155 },
       'DELIMITACIÓN GEOGRÁFICA': { label: 'Ámbito', w: 120, r: 'geo' },
@@ -2448,19 +2456,19 @@
     let allRows = [], filteredRows = [], columns = [];
     let hiddenCols = new Set(DEFAULT_HIDDEN);
     let sortCol = null, sortDir = 1, currentPage = 1;
-    let estadoFilter = null, soloActivas = false;
+    let estadoFilter = null;
     let searchTimeout = null;
     let columnOrder = [];
     let columnWidths = {};
 
     // ── localStorage ──────────────────────────────────────────────────
-    const LS_HIDDEN = 'mapaAyudas_hidden', LS_ESTADO = 'mapaAyudas_estado', LS_ACTIVAS = 'mapaAyudas_activas', LS_ORDER = 'mapaAyudas_order', LS_WIDTHS = 'mapaAyudas_widths';
+    const LS_HIDDEN = 'mapaAyudas_hidden', LS_ESTADO = 'mapaAyudas_estado', LS_ORDER = 'mapaAyudas_order', LS_WIDTHS = 'mapaAyudas_widths';
 
     function savePrefs() {
       try {
         localStorage.setItem(LS_HIDDEN, JSON.stringify([...hiddenCols]));
         localStorage.setItem(LS_ESTADO, estadoFilter || '');
-        localStorage.setItem(LS_ACTIVAS, soloActivas ? '1' : '');
+
         localStorage.setItem(LS_ORDER, JSON.stringify(columnOrder));
         localStorage.setItem(LS_WIDTHS, JSON.stringify(columnWidths));
       } catch (e) { }
@@ -2471,8 +2479,6 @@
         if (h) hiddenCols = new Set(JSON.parse(h));
         const e = localStorage.getItem(LS_ESTADO);
         estadoFilter = (e !== null) ? (e || null) : 'Abierta'; // default Abierta on first visit
-        const a = localStorage.getItem(LS_ACTIVAS);
-        soloActivas = a === '1';
         const o = localStorage.getItem(LS_ORDER);
         if (o) columnOrder = JSON.parse(o);
         const w = localStorage.getItem(LS_WIDTHS);
@@ -2482,20 +2488,19 @@
 
     // ── API ───────────────────────────────────────────────────────────
     async function loadData() {
-      const sheet = document.getElementById('sheetSelect').value;
+      const src = (document.getElementById('fSource') && document.getElementById('fSource').value) || '';
       clearError(); setLoading(true); showSpinner();
       try {
-        const res = await fetch(`/excel?sheet=${encodeURIComponent(sheet)}`);
+        const res = await fetch(`/excel?source=${encodeURIComponent(src || 'both')}`);
         const json = await res.json();
         if (!res.ok) throw new Error(json.error || `HTTP ${res.status}`);
-        const rows = json.data?.[sheet] ?? [];
-        if (!rows.length) throw new Error(`La hoja "${sheet}" está vacía o sin datos legibles.`);
-        if (json.sheets?.length) populateSheetSelect(json.sheets, sheet);
-        // cache badge
+        const rows = json.combinedData ?? [];
+        if (!rows.length) throw new Error('No hay datos disponibles para las fuentes seleccionadas.');
+        // cache badge (combined view has per-source availability)
         const badge = document.getElementById('cacheBadge');
         badge.style.display = 'inline-flex';
-        document.getElementById('cacheDot').className = 'cache-dot' + (json.fromCache ? '' : ' miss');
-        document.getElementById('cacheLabel').textContent = json.fromCache ? 'Caché' : 'Cargado';
+        document.getElementById('cacheDot').className = 'cache-dot';
+        document.getElementById('cacheLabel').textContent = 'Cargado';
         updateSyncStatus(json);
         updateInfoPanel(json, rows.length);
         initData(rows);
@@ -2548,14 +2553,16 @@
       const geo = document.getElementById('fGeo').value;
       const tipo = document.getElementById('fTipo').value;
       const fondo = document.getElementById('fFondo').value;
+      const origen = document.getElementById('fSource') ? document.getElementById('fSource').value : '';
       const actuacion = document.getElementById('fActuacion').value;
       filteredRows = allRows.filter(row => {
         if (organismo && row['ORIGEN > ORGANISMO'] !== organismo) return false;
         if (geo && row['DELIMITACIÓN GEOGRÁFICA'] !== geo) return false;
         if (tipo && row['TIPOLOGÍA DE LA EDIFICACIÓN'] !== tipo) return false;
         if (fondo && row['ORIGEN > FONDO'] !== fondo) return false;
+        if (origen && String((row['_source'] || '')).toLowerCase() !== origen.toLowerCase()) return false;
         if (estadoFilter && (row['ESTADO DE LA CONVOCATORIA'] || '').toLowerCase() !== estadoFilter.toLowerCase()) return false;
-        if (soloActivas) { const h = row['PLAZOS > HASTA']; if (h && h.substring(0, 10) < TODAY) return false; }
+        // 'Activas hoy' filter removed: previously excluded rows with PLAZOS > HASTA < TODAY
         if (actuacion) { const k = `ACTUACIONES SUBVENCIONABLES > ${actuacion}`; if (!(row[k] && row[k].trim())) return false; }
         if (search && !Object.values(row).filter(Boolean).join(' ').toLowerCase().includes(search)) return false;
         return true;
@@ -2571,25 +2578,19 @@
       applyAndRender();
     }
     function toggleActivas() {
-      soloActivas = !soloActivas;
-      document.getElementById('chipActivas').classList.toggle('active', soloActivas);
-      document.getElementById('chipActivas').setAttribute('aria-pressed', String(soloActivas));
-      savePrefs();
-      toast(soloActivas ? 'Mostrando solo convocatorias activas hoy' : 'Filtro de activas desactivado', 'info', 1800);
-      applyAndRender();
+      // Function deprecated and removed from UI. Kept empty to avoid reference errors if called.
     }
     function syncChipUI() {
       document.getElementById('chipAbierta').classList.toggle('active', estadoFilter === 'Abierta');
       document.getElementById('chipAbierta').setAttribute('aria-pressed', String(estadoFilter === 'Abierta'));
       document.getElementById('chipCerrada').classList.toggle('active', estadoFilter === 'Cerrada');
       document.getElementById('chipCerrada').setAttribute('aria-pressed', String(estadoFilter === 'Cerrada'));
-      document.getElementById('chipActivas').classList.toggle('active', soloActivas);
-      document.getElementById('chipActivas').setAttribute('aria-pressed', String(soloActivas));
+      // 'Activas hoy' chip removed; no UI update needed
     }
     function resetFilters() {
-      ['fOrganismo', 'fGeo', 'fTipo', 'fFondo', 'fActuacion'].forEach(id => document.getElementById(id).value = '');
+      ['fOrganismo', 'fGeo', 'fTipo', 'fFondo', 'fActuacion', 'fSource'].forEach(id => document.getElementById(id).value = '');
       document.getElementById('searchInput').value = '';
-      estadoFilter = null; soloActivas = false; syncChipUI(); savePrefs();
+      estadoFilter = null; syncChipUI(); savePrefs();
       sortCol = null; sortDir = 1; filteredRows = [...allRows]; currentPage = 1; renderTable();
       toast('Filtros restablecidos', 'info', 1800);
     }
@@ -2736,6 +2737,11 @@
 
       switch (cfg.r) {
         case 'estado': { const cls = v.toLowerCase() === 'abierta' ? 'badge-abierta' : 'badge-cerrada'; return `<td><span class="badge ${cls}">${esc(v)}</span></td>` }
+        case 'source': {
+          const label = v === 'coam' ? 'COAM' : v === 'plan-recuperacion' ? 'PRTR' : v;
+          const cls = v === 'coam' ? 'badge-source-coam' : v === 'plan-recuperacion' ? 'badge-source-prtr' : 'badge-source';
+          return `<td><span class="badge ${cls}">${esc(label)}</span></td>`;
+        }
         case 'check': return `<td style="text-align:center"> ${v.trim() ? '<span class="checkmark" aria-label="Sí">✔</span>' : ''}</td>`
         case 'link': return v ? `<td class="link-cell"><a href="${esc(v)}" target="_blank" rel="noopener noreferrer" aria-label="Ver convocatoria" onclick="event.stopPropagation()">↗ Ver</a></td>` : `<td>—</td>`
         case 'geo': {
@@ -2782,7 +2788,7 @@
     function fmtDate(v) {
       const s = v.substring(0, 10); const [y, m, d] = s.split('-');
       if (!y || !m || !d) return v;
-      return `${d}/${m}/${y.substring(2)}`;
+      return `${d}/${m}/${y}`;
     }
 
     function renderPagination(pages) {
@@ -2906,6 +2912,9 @@
       fillSel('fGeo', rows, 'DELIMITACIÓN GEOGRÁFICA');
       fillSel('fTipo', rows, 'TIPOLOGÍA DE LA EDIFICACIÓN');
       fillSel('fFondo', rows, 'ORIGEN > FONDO');
+      // Origen: selector estático (COAM / PRTR)
+      const src = document.getElementById('fSource');
+      if (src) src.innerHTML = '<option value="">Todos</option><option value="coam">COAM</option><option value="plan-recuperacion">PRTR</option>';
     }
     function fillSel(id, rows, key) {
       const sel = document.getElementById(id);
@@ -2921,9 +2930,9 @@
 
     // ── Controls ──────────────────────────────────────────────────────
     function enableControls(on) {
-      ['searchInput', 'fOrganismo', 'fGeo', 'fTipo', 'fFondo', 'fActuacion'].forEach(id => document.getElementById(id).disabled = !on);
+      ['searchInput', 'fOrganismo', 'fGeo', 'fTipo', 'fFondo', 'fActuacion', 'fSource'].forEach(id => document.getElementById(id).disabled = !on);
       ['btnFilters', 'btnCols'].forEach(id => document.getElementById(id).disabled = !on);
-      ['chipAbierta', 'chipCerrada', 'chipActivas'].forEach(id => document.getElementById(id).classList.toggle('disabled', !on));
+      ['chipAbierta', 'chipCerrada'].forEach(id => document.getElementById(id).classList.toggle('disabled', !on));
     }
     function setLoading(on) { const b = document.getElementById('btnLoad'); b.disabled = on; b.textContent = on ? '…' : '▶ Cargar' }
     function showSpinner() {

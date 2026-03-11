@@ -1,11 +1,12 @@
 require('dotenv').config();
-const path    = require('path');
+const path = require('path');
 const express = require('express');
-const excelRoutes                    = require('./routes');
-const { sync, startPeriodicCheck }   = require('./syncService');
+const excelRoutes = require('./routes');
+const { sync, startPeriodicCheck } = require('./syncService');
+const { sync: syncPlanRec, startPeriodicCheck: startPlanRecCheck } = require('./scrapePlanRecuperacionService');
 const { confirm: confirmSubscriber } = require('./subscriptionService');
 
-const app  = express();
+const app = express();
 const PORT = process.env.PORT || 3000;
 
 // ── Static frontend ──────────────────────────────────────────────────────────
@@ -55,7 +56,7 @@ validateEnv();
 app.use((err, req, res, _next) => {
   const status = err.statusCode || 500;
   const isProd = process.env.NODE_ENV === 'production';
-  
+
   console.error(`[ERROR] ${req.method} ${req.url} - ${err.message}`);
   if (!isProd && err.stack) console.error(err.stack);
 
@@ -73,20 +74,30 @@ app.listen(PORT, async () => {
   console.log(`  Frontend:  http://localhost:${PORT}`);
   console.log(`  API:       http://localhost:${PORT}/excel\n`);
 
-  // Sync on startup: check source page and download if URL changed or no local copy
+  // ── Sync COAM Excel on startup ────────────────────────────────────────────
   try {
     const result = await sync();
     if (result.downloaded) {
-      console.log(`  [sync] ✔ Archivo actualizado (${result.reason})`);
+      console.log(`  [coam] ✔ Archivo actualizado (${result.reason})`);
     } else {
-      console.log(`  [sync] ✔ Usando copia local (${result.reason})`);
+      console.log(`  [coam] ✔ Usando copia local (${result.reason})`);
     }
-    console.log(`  [sync] URL vigente: ${result.urlFound}\n`);
+    console.log(`  [coam] URL vigente: ${result.urlFound}`);
   } catch (e) {
-    console.warn(`  [sync] ⚠ No se pudo sincronizar al arrancar: ${e.message}`);
-    console.warn(`  [sync]   El servidor continúa. Llama a POST /excel/sync para reintentar.\n`);
+    console.warn(`  [coam] ⚠ No se pudo sincronizar al arrancar: ${e.message}`);
+    console.warn(`  [coam]   El servidor continúa. Llama a POST /excel/sync?source=coam para reintentar.`);
   }
 
-  // Schedule periodic checks
+  // ── Sync Plan Recuperación on startup ─────────────────────────────────────
+  try {
+    const result = await syncPlanRec();
+    console.log(`  [plan-rec] ✔ Scraping completado (${result.reason}): ${result.itemCount} convocatorias\n`);
+  } catch (e) {
+    console.warn(`  [plan-rec] ⚠ No se pudo sincronizar al arrancar: ${e.message}`);
+    console.warn(`  [plan-rec]   El servidor continúa. Llama a POST /excel/sync?source=plan-recuperacion para reintentar.\n`);
+  }
+
+  // Schedule periodic checks for both sources
   startPeriodicCheck();
+  startPlanRecCheck();
 });

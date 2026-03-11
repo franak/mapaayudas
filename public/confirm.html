@@ -1,123 +1,383 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Confirmación de suscripción · Mapa de Ayudas ISAMART</title>
-<meta name="robots" content="noindex,nofollow">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;600;700&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet">
-<style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html{font-size:15px}
-body{background:#ecf0f1;color:#2c3e50;font-family:'Open Sans',sans-serif;min-height:100vh;display:flex;flex-direction:column}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Confirmación de suscripción · Mapa de Ayudas ISAMART</title>
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;600;700&family=Open+Sans:wght@400;500;600&display=swap"
+    rel="stylesheet">
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0
+    }
 
-.topbar{background:#1a252f;padding:.35rem 2rem;display:flex;align-items:center;justify-content:flex-end;gap:1.5rem;font-size:.75rem}
-.topbar a{color:#bdc3c7;text-decoration:none;transition:color .2s}.topbar a:hover{color:#e67e22}
+    html {
+      font-size: 15px
+    }
 
-.site-header{background:#2c3e50;padding:.75rem 2rem;display:flex;align-items:center;gap:1.5rem;box-shadow:0 2px 12px rgba(44,62,80,.2)}
-.logo-wrap{display:flex;align-items:center;gap:.85rem;text-decoration:none}
-.logo-name{font-family:'Raleway',sans-serif;font-size:1.1rem;font-weight:800;color:#fff;letter-spacing:.06em}
-.logo-name span{color:#e67e22}
-.logo-sub{font-size:.62rem;color:#bdc3c7;letter-spacing:.04em;text-transform:uppercase}
+    body {
+      background: #ecf0f1;
+      color: #2c3e50;
+      font-family: 'Open Sans', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column
+    }
 
-main{flex:1;display:flex;align-items:center;justify-content:center;padding:3rem 1.5rem}
+    .topbar {
+      background: #1a252f;
+      padding: .35rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 1.5rem;
+      font-size: .75rem
+    }
 
-.card{
-  background:#fff;border-radius:8px;box-shadow:0 6px 24px rgba(44,62,80,.15);
-  max-width:520px;width:100%;overflow:hidden;
-  animation:cardIn .4s ease both;
-}
-@keyframes cardIn{from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:none}}
+    .topbar a {
+      color: #bdc3c7;
+      text-decoration: none;
+      transition: color .2s
+    }
 
-.card-accent{height:5px;background:#e67e22}
-.card-body{padding:2.5rem 2.5rem 2rem;text-align:center}
+    .topbar a:hover {
+      color: #e67e22
+    }
 
-.icon-wrap{
-  width:72px;height:72px;border-radius:50%;
-  display:flex;align-items:center;justify-content:center;
-  font-size:2rem;margin:0 auto 1.25rem;
-}
-.icon-ok {background:#d5f5e3;color:#27ae60}
-.icon-err{background:#fadbd8;color:#c0392b}
+    .site-header {
+      background: #2c3e50;
+      padding: .75rem 2rem;
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      box-shadow: 0 2px 12px rgba(44, 62, 80, .2)
+    }
 
-.card-title{font-family:'Raleway',sans-serif;font-size:1.6rem;font-weight:700;margin-bottom:.6rem}
-.card-title.ok {color:#27ae60}
-.card-title.err{color:#c0392b}
-.card-text{font-size:.9rem;color:#7f8c8d;line-height:1.7;margin-bottom:1.5rem}
-.card-text strong{color:#2c3e50}
+    .logo-wrap {
+      display: flex;
+      align-items: center;
+      gap: .85rem;
+      text-decoration: none
+    }
 
-.btn-home{
-  display:inline-block;background:#e67e22;color:#fff;
-  padding:.7rem 1.75rem;border-radius:4px;text-decoration:none;
-  font-family:'Raleway',sans-serif;font-size:.85rem;font-weight:700;
-  letter-spacing:.04em;transition:background .2s;
-}
-.btn-home:hover{background:#d35400}
+    .logo-name {
+      font-family: 'Raleway', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: .06em
+    }
 
-.card-footer{
-  background:#f8f9fa;border-top:1px solid #ecf0f1;
-  padding:1rem 2.5rem;text-align:center;
-  font-size:.75rem;color:#bdc3c7;
-}
-.card-footer a{color:#e67e22;text-decoration:none}.card-footer a:hover{text-decoration:underline}
+    .logo-name span {
+      color: #e67e22
+    }
 
-footer{background:#2c3e50;padding:.85rem 2rem;text-align:center;font-size:.65rem;color:rgba(255,255,255,.4)}
-footer a{color:rgba(255,255,255,.4);text-decoration:none;margin:0 .4rem;transition:color .15s}
-footer a:hover{color:#e67e22}
-footer .sep{color:rgba(255,255,255,.2);margin:0 .25rem}
-</style>
+    .logo-sub {
+      font-size: .62rem;
+      color: #bdc3c7;
+      letter-spacing: .04em;
+      text-transform: uppercase
+    }
+
+    main {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 3rem 1.5rem
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 6px 24px rgba(44, 62, 80, .15);
+      max-width: 520px;
+      width: 100%;
+      overflow: hidden;
+      animation: cardIn .4s ease both;
+    }
+
+    @keyframes cardIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px)
+      }
+
+      to {
+        opacity: 1;
+        transform: none
+      }
+    }
+
+    .card-accent {
+      height: 5px;
+      background: #e67e22
+    }
+
+    .card-body {
+      padding: 2.5rem 2.5rem 2rem;
+      text-align: center
+    }
+
+    .icon-wrap {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      margin: 0 auto 1.25rem;
+    }
+
+    .icon-ok {
+      background: #d5f5e3;
+      color: #27ae60
+    }
+
+    .icon-err {
+      background: #fadbd8;
+      color: #c0392b
+    }
+
+    .card-title {
+      font-family: 'Raleway', sans-serif;
+      font-size: 1.6rem;
+      font-weight: 700;
+      margin-bottom: .6rem
+    }
+
+    .card-title.ok {
+      color: #27ae60
+    }
+
+    .card-title.err {
+      color: #c0392b
+    }
+
+    .card-text {
+      font-size: .9rem;
+      color: #7f8c8d;
+      line-height: 1.7;
+      margin-bottom: 1.5rem
+    }
+
+    .card-text strong {
+      color: #2c3e50
+    }
+
+    .btn-home {
+      display: inline-block;
+      background: #e67e22;
+      color: #fff;
+      padding: .7rem 1.75rem;
+      border-radius: 4px;
+      text-decoration: none;
+      font-family: 'Raleway', sans-serif;
+      font-size: .85rem;
+      font-weight: 700;
+      letter-spacing: .04em;
+      transition: background .2s;
+    }
+
+    .btn-home:hover {
+      background: #d35400
+    }
+
+    .card-footer {
+      background: #f8f9fa;
+      border-top: 1px solid #ecf0f1;
+      padding: 1rem 2.5rem;
+      text-align: center;
+      font-size: .75rem;
+      color: #bdc3c7;
+    }
+
+    .card-footer a {
+      color: #e67e22;
+      text-decoration: none
+    }
+
+    .card-footer a:hover {
+      text-decoration: underline
+    }
+
+    /* Footer Reused */
+    footer {
+      background: #1a252f;
+      color: rgba(255, 255, 255, .5);
+      padding: 1.5rem 2rem 1rem;
+      border-top: 3px solid #e67e22;
+      margin-top: 5rem
+    }
+
+    .footer-top {
+      display: flex;
+      gap: 4rem;
+      flex-wrap: wrap;
+      margin-bottom: 2rem;
+      text-align: left;
+    }
+
+    .footer-brand p {
+      font-size: .75rem;
+      color: rgba(255, 255, 255, .85);
+      margin-top: .5rem;
+      max-width: 250px
+    }
+
+    .footer-col h4 {
+      color: #ffffff;
+      font-size: .7rem;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+      letter-spacing: .1em;
+      font-family: 'Raleway', sans-serif;
+    }
+
+    .footer-col a {
+      display: block;
+      font-size: .75rem;
+      color: rgba(255, 255, 255, .85);
+      margin-bottom: .5rem;
+      transition: color .15s
+    }
+
+    .footer-col a:hover {
+      color: #e67e22
+    }
+
+    .footer-bottom {
+      border-top: 1px solid rgba(255, 255, 255, .15);
+      padding-top: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      font-size: .65rem;
+      color: rgba(255, 255, 255, .85);
+      text-align: left;
+    }
+
+    .footer-legal {
+      display: flex;
+      gap: 1.5rem
+    }
+
+    .footer-legal a {
+      color: rgba(255, 255, 255, .85);
+      text-decoration: none;
+      transition: color .15s
+    }
+
+    .footer-legal a:hover {
+      color: #ffffff
+    }
+
+    @media (max-width:800px) {
+      .footer-top {
+        flex-direction: column;
+        gap: 2rem
+      }
+
+      .footer-bottom {
+        flex-direction: column;
+        text-align: center;
+        gap: .75rem
+      }
+
+      .footer-legal {
+        justify-content: center
+      }
+    }
+  </style>
 </head>
+
 <body>
 
-<div class="topbar">
-  <a href="tel:+34615469845">📞 615 469 845</a>
-  <a href="/">← Volver al mapa</a>
-</div>
-
-<header class="site-header">
-  <a href="/" class="logo-wrap">
-    <svg width="36" height="36" viewBox="0 0 36 36" aria-hidden="true">
-      <rect width="36" height="36" rx="5" fill="#e67e22"/>
-      <text x="18" y="23" text-anchor="middle" font-family="Arial" font-size="12" font-weight="800" fill="white">IS</text>
-    </svg>
-    <div>
-      <div class="logo-name">I <span>S</span> A M A R T</div>
-      <div class="logo-sub">Rehabilitación Energética</div>
-    </div>
-  </a>
-</header>
-
-<main>
-  <div class="card" id="card">
-    <div class="card-accent"></div>
-    <div class="card-body" id="cardBody">
-      <!-- filled by JS -->
-    </div>
-    <div class="card-footer">
-      Cualquier consulta: <a href="tel:+34615469845">615 469 845</a> ·
-      Para darse de baja: <a href="/">acceda al Mapa de Ayudas</a>
-    </div>
+  <div class="topbar">
+    <a href="tel:+34615469845">📞 615 469 845</a>
+    <a href="/">← Volver al mapa</a>
   </div>
-</main>
 
-<footer>
-  © 2025 REHABILITACION ENERGETICA I S A M A R T, SL (NIF: B56558869) · Madrid · 615 469 845
-  <span class="sep">|</span>
-  <a href="/legal/aviso-legal.html">Aviso Legal</a>
-  <span class="sep">|</span>
-  <a href="/legal/privacidad.html">Privacidad</a>
-  <span class="sep">|</span>
-  <a href="/legal/cookies.html">Cookies</a>
-</footer>
+  <header class="site-header">
+    <a href="/" class="logo-wrap">
+      <svg width="36" height="36" viewBox="0 0 36 36" aria-hidden="true">
+        <rect width="36" height="36" rx="5" fill="#e67e22" />
+        <text x="18" y="23" text-anchor="middle" font-family="Arial" font-size="12" font-weight="800"
+          fill="white">IS</text>
+      </svg>
+      <div>
+        <div class="logo-name">I <span>S</span> A M A R T</div>
+        <div class="logo-sub">Rehabilitación Energética</div>
+      </div>
+    </a>
+  </header>
 
-<script>
-const params = new URLSearchParams(location.search);
-const status = params.get('status');
-const ok = status === 'ok';
+  <main>
+    <div class="card" id="card">
+      <div class="card-accent"></div>
+      <div class="card-body" id="cardBody">
+        <!-- filled by JS -->
+      </div>
+      <div class="card-footer">
+        Cualquier consulta: <a href="tel:+34615469845">615 469 845</a> ·
+        Para darse de baja: <a href="/">acceda al Mapa de Ayudas</a>
+      </div>
+    </div>
+  </main>
 
-document.getElementById('cardBody').innerHTML = ok
-  ? `<div class="icon-wrap icon-ok">✔</div>
+  <footer role="contentinfo">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <div class="logo-name">I <span>S</span> A M A R T</div>
+        <p>Gestión integral de proyectos de rehabilitación energética.</p>
+        <p style="margin-top:.5rem">NIF: B56558869<br>
+          Tel: <a href="tel:+34615469845" style="color:rgba(255,255,255,.9); font-weight: 500;">615 469 845</a><br>
+          Web: <a href="https://isamart.es" target="_blank" rel="noopener"
+            style="color:rgba(255,255,255,.9); font-weight: 500;">isamart.es</a></p>
+      </div>
+      <div class="footer-col" style="flex:1; min-width:160px;">
+        <h4>Herramienta</h4>
+        <a href="/" onclick="window.location.href='/';return false;">Volver al Visor de Ayudas</a>
+        <a href="https://oficinarehabilitacion.coam.org/oficina-rehabilitacion-ayudas-mapa-ayudas-vigente/"
+          target="_blank" rel="noopener">Fuente de datos: Oficina COAM</a>
+        · <a href="https://planderecuperacion.gob.es/" target="_blank" rel="noopener">Fuente de datos: Plan de
+          Recuperación (PRTR)</a>
+      </div>
+      <div class="footer-col" style="flex:1; min-width:160px;">
+        <h4>Legal</h4>
+        <a href="/legal/aviso-legal.html">Aviso Legal</a>
+        <a href="/legal/privacidad.html">Política de Privacidad</a>
+        <a href="/legal/cookies.html">Política de Cookies</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2025 REHABILITACION ENERGETICA I S A M A R T, SL · Todos los derechos reservados</span>
+      <div class="footer-legal">
+        <a href="/legal/aviso-legal.html">Aviso Legal</a>
+        <a href="/legal/privacidad.html">Política de Privacidad</a>
+        <a href="/legal/cookies.html">Política de Cookies</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const params = new URLSearchParams(location.search);
+    const status = params.get('status');
+    const ok = status === 'ok';
+
+    document.getElementById('cardBody').innerHTML = ok
+      ? `<div class="icon-wrap icon-ok">✔</div>
      <h1 class="card-title ok">¡Suscripción confirmada!</h1>
      <p class="card-text">
        Muchas gracias. Su correo ha sido verificado correctamente.<br>
@@ -126,7 +386,7 @@ document.getElementById('cardBody').innerHTML = ok
        con nuevas convocatorias.
      </p>
      <a href="/" class="btn-home">Ir al Mapa de Ayudas →</a>`
-  : `<div class="icon-wrap icon-err">✕</div>
+      : `<div class="icon-wrap icon-err">✕</div>
      <h1 class="card-title err">Enlace no válido</h1>
      <p class="card-text">
        El enlace de confirmación no es válido o ya ha sido utilizado.<br>
@@ -135,6 +395,7 @@ document.getElementById('cardBody').innerHTML = ok
        <strong><a href="mailto:rgpd@isamart.es" style="color:#e67e22">rgpd@isamart.es</a></strong>.
      </p>
      <a href="/" class="btn-home">Volver al Mapa de Ayudas</a>`;
-</script>
+  </script>
 </body>
+
 </html>

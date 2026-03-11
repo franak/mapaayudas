@@ -5,11 +5,11 @@
  * Solo suscriptores con confirmado=true reciben alertas.
  */
 
-const fs      = require('fs');
-const path    = require('path');
-const crypto  = require('crypto');
+const fs = require('fs');
+const path = require('path');
+const crypto = require('crypto');
 
-const DATA_DIR  = path.resolve(process.env.DATA_DIR || path.join(__dirname, '..', 'data'));
+const DATA_DIR = path.resolve(process.env.DATA_DIR || path.join(__dirname, '..', 'data'));
 const SUBS_FILE = path.join(DATA_DIR, 'subscriptions.json');
 
 // ─── Helpers ──────────────────────────────────────────────────────
@@ -35,6 +35,24 @@ function getAll() {
 function getConfirmedEmails() {
   return getAll()
     .filter(s => s.confirmado === true)
+    .map(s => s.email)
+    .filter(Boolean);
+}
+
+/**
+ * Obtiene emails de suscriptores confirmados para una fuente específica.
+ * @param {string} source - 'coam', 'plan-recuperacion', o undefined para todos
+ * @returns {array} Array de emails
+ */
+function getConfirmedEmailsBySource(source) {
+  return getAll()
+    .filter(s => s.confirmado === true)
+    .filter(s => {
+      // Si no hay fuente especificada en la suscripción, aplica a todas
+      if (!s.source || s.source === 'all') return true;
+      // Si la suscripción es para una fuente específica, filtra
+      return s.source === source;
+    })
     .map(s => s.email)
     .filter(Boolean);
 }
@@ -74,16 +92,17 @@ function add(data) {
   }
 
   const record = {
-    id:             Date.now(),
-    nombre:         (data.nombre        || '').trim(),
-    email:          normalEmail,
-    telefono:       (data.telefono      || '').trim(),
-    observaciones:  (data.observaciones || '').trim(),
-    aceptaRGPD:     true,
-    confirmado:     false,
-    confirmToken:   generateToken(),
-    registradoEn:   new Date().toISOString(),
-    confirmadoEn:   null,
+    id: Date.now(),
+    nombre: (data.nombre || '').trim(),
+    email: normalEmail,
+    telefono: (data.telefono || '').trim(),
+    observaciones: (data.observaciones || '').trim(),
+    source: (data.source || 'all').toLowerCase(), // 'all', 'coam', 'plan-recuperacion'
+    aceptaRGPD: true,
+    confirmado: false,
+    confirmToken: generateToken(),
+    registradoEn: new Date().toISOString(),
+    confirmadoEn: null,
   };
 
   fs.appendFileSync(SUBS_FILE, JSON.stringify(record) + '\n', 'utf8');
@@ -106,7 +125,7 @@ function confirm(token) {
   const sub = all[idx];
   if (sub.confirmado) return { ok: true, message: 'Ya estaba confirmado.', record: sub };
 
-  sub.confirmado   = true;
+  sub.confirmado = true;
   sub.confirmadoEn = new Date().toISOString();
   // Invalidate token after use
   sub.confirmToken = null;
@@ -115,4 +134,4 @@ function confirm(token) {
   return { ok: true, message: 'Suscripción confirmada.', record: sub };
 }
 
-module.exports = { getAll, getConfirmedEmails, add, confirm };
+module.exports = { getAll, getConfirmedEmails, getConfirmedEmailsBySource, add, confirm };
