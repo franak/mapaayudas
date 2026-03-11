@@ -4,6 +4,7 @@ const express = require('express');
 const excelRoutes = require('./routes');
 const { sync, startPeriodicCheck } = require('./syncService');
 const { sync: syncPlanRec, startPeriodicCheck: startPlanRecCheck } = require('./scrapePlanRecuperacionService');
+const bdnsService = require('./bdnsService');
 const { confirm: confirmSubscriber } = require('./subscriptionService');
 
 const app = express();
@@ -100,4 +101,22 @@ app.listen(PORT, async () => {
   // Schedule periodic checks for both sources
   startPeriodicCheck();
   startPlanRecCheck();
+  // BDNS / PRTR (ATOM) periodic check
+  try {
+    if (bdnsService.FEED_URL) {
+      console.log(`  [bdns] Iniciando sincronización BDNS (PRTR(ATOM)) -> ${bdnsService.FEED_URL}`);
+      // Intentar primer fetch al arrancar
+      try {
+        const r = await bdnsService.fetchFeed();
+        console.log(`  [bdns] ✔ Inicial: ${r.itemCount} items (${r.reason || 'ok'})`);
+      } catch (e) {
+        console.warn(`  [bdns] ⚠ Error inicial: ${e.message}`);
+      }
+      bdnsService.startPeriodicCheck();
+    } else {
+      console.log('  [bdns] BDNS_FEED_URL no configurado — salto sincronización BDNS');
+    }
+  } catch (e) {
+    console.warn('[bdns] Error al arrancar servicio BDNS:', e.message);
+  }
 });
