@@ -1315,6 +1315,11 @@
     .calendar-btn-small {
       display:inline-flex; align-items:center; justify-content:center; width:22px; height:22px; font-size:12px; padding:0; margin-left:6px; border-radius:4px; border:1px solid rgba(44,62,80,.06); background:transparent; cursor:pointer;
     }
+    /* Normalize table & card typography */
+    .table, .table th, .table td, .mobile-card, .card-title, .card-value {
+      font-family: var(--font-body);
+      font-size: .85rem;
+    }
 
     .expiry-warn {
       display: inline-flex;
@@ -2161,7 +2166,12 @@
         <div class="info-row"><span class="info-key">Comprobado</span><span class="info-val" id="iChecked">—</span>
         </div>
         <div class="info-row"><span class="info-key">Registros</span><span class="info-val" id="iTotal">—</span></div>
-          <div class="info-row"><span class="info-key">Fuentes</span><span class="info-val" id="iSources">—</span></div>
+        <div class="info-row"><span class="info-key">Registros</span><span class="info-val" id="iTotal">—</span></div>
+        <div class="info-row"><span class="info-key">Fuente origen</span><span class="info-val" id="iSourceUrl">—</span></div>
+        <div class="info-row"><span class="info-key">Última descarga</span><span class="info-val" id="iSynced">—</span></div>
+        <div class="info-row"><span class="info-key">Última comprobación</span><span class="info-val" id="iChecked">—</span></div>
+        <div class="info-row"><span class="info-key">Fuentes</span><span class="info-val" id="iSources">—</span></div>
+        <div class="info-row"><span class="info-key">Cache</span><span class="info-val" id="iCache">—</span></div>
       </div>
     </div>
 
@@ -2727,7 +2737,7 @@
         <div class="card-field">
           <span class="card-label">Hasta</span>
           <span class="card-value">${row['PLAZOS > HASTA'] ? fmtDate(row['PLAZOS > HASTA']) : '—'}</span>
-          ${row['PLAZOS > HASTA'] ? `<button class="calendar-btn-small" title="Añadir a calendario" onclick="downloadICS(${JSON.stringify({titulo: t, fechaHasta: row['PLAZOS > HASTA'], enlace: docUrl, objeto: row['OBJETO / LÍNEA DE ACTUACIÓN'] || ''}).replace(/"/g,'&quot;')})">📅</button>` : ''}
+          ${row['PLAZOS > HASTA'] ? `<button class="calendar-btn-small" title="Añadir a calendario" onclick="event.stopPropagation(); downloadICS(${JSON.stringify({titulo: t, fechaHasta: row['PLAZOS > HASTA'], enlace: docUrl, objeto: row['OBJETO / LÍNEA DE ACTUACIÓN'] || ''}).replace(/"/g,'&quot;')})">📅</button>` : ''}
         </div>
         <div class="card-field">
           <span class="card-label">Ámbito</span>
@@ -2784,7 +2794,7 @@
           if (!v) return `<td class="td-mono">—</td>`;
           const d = v.substring(0, 10), soon = d >= TODAY && d <= SOON_DATE, days = daysUntil(d);
           const cal = JSON.stringify({titulo: row['TÍTULO DE LA CONVOCATORIA'] || row['OBJETO / LÍNEA DE ACTUACIÓN'] || 'Convocatoria', fechaHasta: d, enlace: row['ACCESO A LA CONVOCATORIA'] || '', objeto: row['OBJETO / LÍNEA DE ACTUACIÓN'] || ''}).replace(/"/g, '&quot;');
-          return `<td class="td-mono"><div class="expiry-cell">${fmtDate(v)}${soon ? `<span class="expiry-warn" aria-label="${days} días para vencer">⚠ ${days}d</span>` : ''}<button class="calendar-btn" title="Añadir a calendario" onclick="downloadICS(${cal})">📅</button></div></td>`
+          return `<td class="td-mono"><div class="expiry-cell">${fmtDate(v)}${soon ? `<span class="expiry-warn" aria-label="${days} días para vencer">⚠ ${days}d</span>` : ''}<button class="calendar-btn" title="Añadir a calendario" onclick="event.stopPropagation(); downloadICS(${cal})">📅</button></div></td>`
         }
         case 'trunc':
           if (col === 'TÍTULO DE LA CONVOCATORIA') {
@@ -2867,6 +2877,8 @@
       document.getElementById('iSynced').innerHTML = sd ? fmtDateAge(sd) : '—';
       document.getElementById('iChecked').innerHTML = cd ? fmtDateAge(cd) : '—';
       document.getElementById('iTotal').textContent = totalRows != null ? `${totalRows} filas` : '—';
+      document.getElementById('iSourceUrl').innerHTML = url ? `<a href="${url}" target="_blank" rel="noopener">${fn}</a>` : '—';
+      document.getElementById('iCache').textContent = json.cacheTtlSeconds ? `${json.cacheTtlSeconds}s` : '—';
       const ageH = sd ? (Date.now() - sd.getTime()) / 36e5 : Infinity;
       const fresh = ageH < 24;
       document.getElementById('infoPanel').classList.toggle('fresh', fresh);
@@ -2881,9 +2893,10 @@
           const parts = [];
           Object.keys(json.sources).forEach(k => {
             const s = json.sources[k];
-            const label = k.toLowerCase() === 'coam' ? 'COAM' : (k.toLowerCase().includes('recuper') ? 'PRTR' : k);
+            const keyLower = k.toLowerCase();
+            const label = keyLower === 'coam' ? 'COAM' : (keyLower.includes('recuper') ? 'PRTR' : k);
             const count = s.rows != null ? ` (${s.rows})` : '';
-            const href = links[k] || links[k.toLowerCase()] || '#';
+            const href = links[k] || links[keyLower] || '#';
             const avail = s.available === false ? ' (no disponible)' : '';
             parts.push(`<a href="${href}" target="_blank" rel="noopener">${label}</a>${count}${avail}`);
           });
