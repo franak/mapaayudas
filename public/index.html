@@ -2185,6 +2185,7 @@
         <div class="info-row"><span class="info-key">Última descarga</span><span class="info-val" id="iSynced">—</span>
         </div>
         <div class="info-row"><span class="info-key">Fuentes</span><span class="info-val" id="iSources">—</span></div>
+        <div class="info-row"><span class="info-key">PRTR (ATOM)</span><span class="info-val" id="iBdns">—</span></div>
         <div class="info-row"><span class="info-key">Registros</span><span class="info-val" id="iTotal">—</span></div>
       </div>
     </div>
@@ -2907,6 +2908,23 @@
           document.getElementById('iSources').textContent = '—';
         }
       } catch (e) { document.getElementById('iSources').textContent = '—'; }
+
+      // Obtener conteo BDNS (PRTR ATOM) desde API específica
+      (async () => {
+        try {
+          const r = await fetch('/excel/bdns');
+          if (r.status === 204) {
+            document.getElementById('iBdns').textContent = '0';
+          } else if (r.ok) {
+            const j = await r.json();
+            document.getElementById('iBdns').textContent = j.rows != null ? `${j.rows} items` : '—';
+          } else {
+            document.getElementById('iBdns').textContent = '—';
+          }
+        } catch (e) {
+          document.getElementById('iBdns').textContent = '—';
+        }
+      })();
 
       // Freshness indicator (keep behaviour)
       const ageH = sd ? (Date.now() - sd.getTime()) / 36e5 : Infinity;
