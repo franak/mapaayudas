@@ -6,8 +6,8 @@ const {
   getSheetNames,
 } = require('./excelService');
 const { cache, buildKey, CACHE_TTL } = require('./cache');
-const { sync, getLocalFilePath, getState } = require('./syncService');
-const { sync: syncPlanRec, getCachedData: getPlanRecData, getState: getPlanRecState } = require('./scrapePlanRecuperacionService');
+const { sync, getLocalFilePath, getState, enableSync: enableCoamSync, disableSync: disableCoamSync } = require('./syncService');
+const { sync: syncPlanRec, getCachedData: getPlanRecData, getState: getPlanRecState, enableSync: enablePlanRecSync, disableSync: disablePlanRecSync } = require('./scrapePlanRecuperacionService');
 const { fetchFeed: fetchBdns, getCachedData: getBdnsData, getState: getBdnsState } = require('./bdnsService');
 const { fetchOpen: fetchBdnsApi, getCachedData: getBdnsApiData, getState: getBdnsApiState } = require('./bdnsApiService');
 const { add: addSubscriber, confirm: confirmSubscriber } = require('./subscriptionService');
@@ -85,6 +85,45 @@ router.post('/sync', async (req, res, next) => {
     // Invalidate parsed-data cache so next request re-parses the new file
     cache.flushAll();
     res.json({ ok: true, ...results });
+  } catch (err) {
+    next(err);
+  }
+});
+
+// ─────────────────────────────────────────────────────────────────
+// POST /excel/source  →  habilitar/deshabilitar una fuente y actuar en consecuencia
+// Body: { source: 'coam'|'plan-recuperacion', enabled: true|false }
+// ─────────────────────────────────────────────────────────────────
+router.post('/source', async (req, res, next) => {
+  try {
+    const { source, enabled } = req.body || {};
+    if (!source || typeof enabled === 'undefined') return res.status(400).json({ error: 'Parámetros inválidos. body: { source, enabled }' });
+
+    if (source === 'coam') {
+      if (enabled === false) {
+        const result = disableCoamSync();
+        cache.flushAll();
+        return res.json({ ok: true, source: 'coam', enabled: false, result });
+      } else {
+        const result = await enableCoamSync();
+        cache.flushAll();
+        return res.json({ ok: true, source: 'coam', enabled: true, result });
+      }
+    }
+
+    if (source === 'plan-recuperacion') {
+      if (enabled === false) {
+        const result = disablePlanRecSync();
+        cache.flushAll();
+        return res.json({ ok: true, source: 'plan-recuperacion', enabled: false, result });
+      } else {
+        const result = await enablePlanRecSync();
+        cache.flushAll();
+        return res.json({ ok: true, source: 'plan-recuperacion', enabled: true, result });
+      }
+    }
+
+    return res.status(400).json({ error: 'Fuente desconocida' });
   } catch (err) {
     next(err);
   }

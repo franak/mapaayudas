@@ -194,6 +194,18 @@ async function sync(force = false) {
     let reason = '?';
 
     try {
+        if (process.env.PLAN_RECUPERACION_ENABLED === 'false') {
+            reason = 'Sincronización deshabilitada por configuración';
+            console.log(`[plan-rec] ⚠ ${reason}`);
+            saveState();
+            return {
+                checked: true,
+                itemCount: 0,
+                changed: false,
+                reason,
+                urlSource: PLAN_REC_URL.substring(0, 50) + '...',
+            };
+        }
         convocatorias = await scrapeConvocatorias();
         console.log(`[plan-rec] ✔ Scraping completado: ${convocatorias.length} convocatorias encontradas`);
 
@@ -242,6 +254,10 @@ async function sync(force = false) {
  */
 function getCachedData() {
     try {
+        // If the service is disabled, always return empty array so frontend doesn't show it
+        if (process.env.PLAN_RECUPERACION_ENABLED === 'false') {
+            return [];
+        }
         if (fs.existsSync(CACHE_FILE)) {
             return JSON.parse(fs.readFileSync(CACHE_FILE, 'utf8'));
         }
@@ -295,5 +311,25 @@ module.exports = {
     getState,
     getCacheFilePath,
     startPeriodicCheck,
+    // Enable/disable helpers for runtime toggling
+    async enableSync() {
+        return await sync(true);
+    },
+    disableSync() {
+        try {
+            // Remove cache file so the frontend won't show stale data
+            if (fs.existsSync(CACHE_FILE)) fs.unlinkSync(CACHE_FILE);
+            state = {
+                lastCheckedAt: null,
+                lastSyncedAt: null,
+                lastContentHash: null,
+                itemCount: 0,
+            };
+            saveState();
+            return { ok: true, deleted: true };
+        } catch (e) {
+            return { ok: false, error: e.message };
+        }
+    },
     PLAN_REC_URL,
 };

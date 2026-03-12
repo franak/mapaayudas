@@ -18,12 +18,12 @@ npm start              # o: npm run dev  (recarga automática)
 
 El servicio soporta **dos modos** de apuntar al Excel:
 
-| Variable | Descripción |
-|----------|-------------|
-| `BASE_EXCEL_URL` | Parte fija de la URL (ej: `https://ejemplo.com/archivos/`) |
+| Variable            | Descripción                                                            |
+| ------------------- | ---------------------------------------------------------------------- |
+| `BASE_EXCEL_URL`    | Parte fija de la URL (ej: `https://ejemplo.com/archivos/`)             |
 | `DEFAULT_EXCEL_URL` | URL completa usada como fallback cuando no se pasa `?file=` ni `?url=` |
-| `CACHE_TTL` | Segundos de vida de la caché (defecto: `300`) |
-| `MAX_FILE_SIZE_MB` | Tamaño máximo descargable (defecto: `50`) |
+| `CACHE_TTL`         | Segundos de vida de la caché (defecto: `300`)                          |
+| `MAX_FILE_SIZE_MB`  | Tamaño máximo descargable (defecto: `50`)                              |
 
 ### Cómo se resuelve la URL en cada petición
 
@@ -50,14 +50,14 @@ Devuelve el contenido del Excel como JSON.
 
 #### Parámetros de query
 
-| Parámetro | Descripción |
-|-----------|-------------|
-| `file` | Nombre del archivo (se combina con `BASE_EXCEL_URL`) |
-| `url` | URL completa alternativa |
-| `sheet` | Nombre de la hoja. Si se omite, devuelve todas |
-| `nocache=true` | Fuerza descarga ignorando la caché |
-| `<columna>=<valor>` | Filtro exacto (case-insensitive) |
-| `<columna>=~<parcial>` | Filtro por contenido (prefijo `~`) |
+| Parámetro              | Descripción                                          |
+| ---------------------- | ---------------------------------------------------- |
+| `file`                 | Nombre del archivo (se combina con `BASE_EXCEL_URL`) |
+| `url`                  | URL completa alternativa                             |
+| `sheet`                | Nombre de la hoja. Si se omite, devuelve todas       |
+| `nocache=true`         | Fuerza descarga ignorando la caché                   |
+| `<columna>=<valor>`    | Filtro exacto (case-insensitive)                     |
+| `<columna>=~<parcial>` | Filtro por contenido (prefijo `~`)                   |
 
 #### Ejemplos con el Mapa de Ayudas
 
@@ -151,6 +151,38 @@ Vacía toda la caché del servidor.
 ```json
 { "message": "Cache cleared", "deletedKeys": 3 }
 ```
+
+---
+
+### `POST /excel/source`
+
+Habilita o deshabilita en tiempo de ejecución una de las fuentes (`coam` o `plan-recuperacion`).
+
+Body JSON: `{ "source": "coam"|"plan-recuperacion", "enabled": true|false }`
+
+- Si `enabled: false` → borra la caché/copia local de la fuente para que el frontend no la muestre.
+- Si `enabled: true` → fuerza una sincronización inmediata con la fuente y devuelve el resultado para mostrarlo en el frontend.
+
+Ejemplos:
+
+```bash
+# Deshabilitar Plan Recuperación (borra cache)
+curl -X POST http://localhost:3000/excel/source \
+  -H "Content-Type: application/json" \
+  -d '{"source":"plan-recuperacion","enabled":false}'
+
+# Habilitar COAM (forzar sync)
+curl -X POST http://localhost:3000/excel/source \
+  -H "Content-Type: application/json" \
+  -d '{"source":"coam","enabled":true}'
+```
+
+Respuesta de ejemplo (habilitar):
+
+```json
+{ "ok": true, "source": "coam", "enabled": true, "result": { "checked": true, "downloaded": true, "reason": "forzado" } }
+```
+
 
 ---
 

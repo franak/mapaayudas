@@ -2945,6 +2945,8 @@
       document.getElementById('freshBadge').style.display = fresh ? 'inline-flex' : 'none';
       if (fresh) toast(`Archivo actualizado hace ${ageH < 1 ? 'menos de 1h' : Math.floor(ageH) + 'h'}`, 'ok', 4000);
     }
+
+
     function fmtDateAge(date) {
       const d = date.getDate().toString().padStart(2, '0'), m = (date.getMonth() + 1).toString().padStart(2, '0'), y = date.getFullYear().toString().substring(2);
       const hh = date.getHours().toString().padStart(2, '0'), mm = date.getMinutes().toString().padStart(2, '0');

@@ -9,30 +9,30 @@
  *  5. Comprobación periódica: intervalo configurable vía CHECK_INTERVAL_HOURS en .env.
  */
 
-const fs    = require('fs');
-const path  = require('path');
+const fs = require('fs');
+const path = require('path');
 const axios = require('axios');
 
 // ─── Config ───────────────────────────────────────────────────────────────────
 
-const SOURCE_PAGE  = process.env.SOURCE_PAGE_URL ||
+const SOURCE_PAGE = process.env.SOURCE_PAGE_URL ||
   'https://oficinarehabilitacion.coam.org/oficina-rehabilitacion-ayudas-mapa-ayudas-vigente/';
 
-const DATA_DIR     = path.resolve(process.env.DATA_DIR || path.join(__dirname, '..', 'data'));
-const STATE_FILE   = path.join(DATA_DIR, 'sync-state.json');
-const LOCAL_FILE   = path.join(DATA_DIR, 'mapa-ayudas-vigente.xlsx');
+const DATA_DIR = path.resolve(process.env.DATA_DIR || path.join(__dirname, '..', 'data'));
+const STATE_FILE = path.join(DATA_DIR, 'sync-state.json');
+const LOCAL_FILE = path.join(DATA_DIR, 'mapa-ayudas-vigente.xlsx');
 
-const CHECK_HOURS  = parseFloat(process.env.CHECK_INTERVAL_HOURS || '6');
-const MAX_BYTES    = (parseInt(process.env.MAX_FILE_SIZE_MB || '50', 10)) * 1024 * 1024;
+const CHECK_HOURS = parseFloat(process.env.CHECK_INTERVAL_HOURS || '6');
+const MAX_BYTES = (parseInt(process.env.MAX_FILE_SIZE_MB || '50', 10)) * 1024 * 1024;
 
 // ─── State ────────────────────────────────────────────────────────────────────
 
 /** In-memory mirror of sync-state.json */
 let state = {
-  lastUrl:       null,   // URL from which the local file was downloaded
+  lastUrl: null,   // URL from which the local file was downloaded
   lastCheckedAt: null,   // ISO timestamp of last scrape attempt
-  lastSyncedAt:  null,   // ISO timestamp of last successful download
-  localFile:     null,   // absolute path to local copy
+  lastSyncedAt: null,   // ISO timestamp of last successful download
+  localFile: null,   // absolute path to local copy
 };
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -46,11 +46,11 @@ function loadState() {
     if (fs.existsSync(STATE_FILE)) {
       const data = JSON.parse(fs.readFileSync(STATE_FILE, 'utf8'));
       // Only keep the data we want to persist between environments
-      state.lastUrl       = data.lastUrl       || null;
+      state.lastUrl = data.lastUrl || null;
       state.lastCheckedAt = data.lastCheckedAt || null;
-      state.lastSyncedAt  = data.lastSyncedAt  || null;
+      state.lastSyncedAt = data.lastSyncedAt || null;
       // We don't restore 'localFile' from disk anymore, we use the constant LOCAL_FILE
-      state.localFile     = LOCAL_FILE;
+      state.localFile = LOCAL_FILE;
     }
   } catch {
     console.warn('[sync] No se pudo leer sync-state.json — empezando desde cero.');
@@ -61,9 +61,9 @@ function saveState() {
   try {
     // Only persist fields that are useful across environments
     const toSave = {
-      lastUrl:       state.lastUrl,
+      lastUrl: state.lastUrl,
       lastCheckedAt: state.lastCheckedAt,
-      lastSyncedAt:  state.lastSyncedAt,
+      lastSyncedAt: state.lastSyncedAt,
       // We explicitly leave out absolute localFile path
     };
     fs.writeFileSync(STATE_FILE, JSON.stringify(toSave, null, 2), 'utf8');
@@ -139,6 +139,12 @@ async function sync(force = false) {
   let urlFound, downloaded = false, reason;
 
   try {
+    if (process.env.COAM_ENABLED === 'false') {
+      reason = 'Sincronización COAM deshabilitada por configuración';
+      console.log(`[sync] ⚠ ${reason}`);
+      saveState();
+      return { checked: now, urlFound: null, downloaded: false, reason, localFile: null };
+    }
     urlFound = await scrapeExcelUrl();
     console.log(`[sync] URL vigente: ${urlFound}`);
   } catch (e) {
@@ -146,22 +152,22 @@ async function sync(force = false) {
     throw new Error(`Error al obtener la URL del mapa: ${e.message}`);
   }
 
-  const localExists  = fs.existsSync(LOCAL_FILE);
-  const urlChanged   = state.lastUrl !== urlFound;
+  const localExists = fs.existsSync(LOCAL_FILE);
+  const urlChanged = state.lastUrl !== urlFound;
 
   if (force || urlChanged || !localExists) {
-    reason = force      ? 'forzado'
-           : urlChanged ? `URL actualizada (antes: ${state.lastUrl || 'ninguna'})`
-                        : 'no existía copia local';
+    reason = force ? 'forzado'
+      : urlChanged ? `URL actualizada (antes: ${state.lastUrl || 'ninguna'})`
+        : 'no existía copia local';
 
     console.log(`[sync] Descargando archivo — motivo: ${reason}`);
 
     try {
       await downloadExcel(urlFound);
-      state.lastUrl      = urlFound;
+      state.lastUrl = urlFound;
       state.lastSyncedAt = now;
-      state.localFile    = LOCAL_FILE;
-      downloaded         = true;
+      state.localFile = LOCAL_FILE;
+      downloaded = true;
     } catch (e) {
       saveState();
       throw new Error(`Error al descargar el archivo: ${e.message}`);
@@ -212,8 +218,30 @@ function stopPeriodicCheck() {
 /** Returns the path to the local Excel copy, or null if it doesn't exist yet. */
 function getLocalFilePath() {
   loadState();
+  // If COAM sync is disabled, behave as if no local file exists
+  if (process.env.COAM_ENABLED === 'false') return null;
   const p = state.localFile || LOCAL_FILE;
   return fs.existsSync(p) ? p : null;
+}
+
+/** Remove local file and reset state for disabling sync at runtime */
+function disableSync() {
+  try {
+    if (fs.existsSync(LOCAL_FILE)) fs.unlinkSync(LOCAL_FILE);
+    state.lastUrl = null;
+    state.lastSyncedAt = null;
+    state.lastCheckedAt = null;
+    state.localFile = null;
+    saveState();
+    return { ok: true, deleted: true };
+  } catch (e) {
+    return { ok: false, error: e.message };
+  }
+}
+
+/** Enable sync at runtime by forcing an immediate sync */
+async function enableSync() {
+  return await sync(true);
 }
 
 /** Returns the current in-memory state (safe copy). */
@@ -222,4 +250,4 @@ function getState() {
   return { ...state, localFile: LOCAL_FILE, dataDir: DATA_DIR };
 }
 
-module.exports = { sync, getLocalFilePath, getState, startPeriodicCheck, stopPeriodicCheck };
+module.exports = { sync, getLocalFilePath, getState, startPeriodicCheck, stopPeriodicCheck, enableSync, disableSync };
