@@ -47,11 +47,11 @@ function buildHtml(title, bodyHtml) {
           Rehabilitación Energética
         </div>
        </td>
-       <td align="right">
-        <div style="font-size:11px;color:rgba(255,255,255,.45);line-height:1.7;">
-         615 469 845<br>contacto@isamart.es
-        </div>
-       </td>
+      //  <td align="right">
+      //   <div style="font-size:11px;color:rgba(255,255,255,.45);line-height:1.7;">
+      //    615 469 845<br>contacto@isamart.es
+      //   </div>
+      //  </td>
       </tr>
      </table>
      <div style="margin-top:14px;padding-top:14px;border-top:1px solid rgba(255,255,255,.12);">
@@ -80,7 +80,7 @@ function buildHtml(title, bodyHtml) {
       con el asunto «BAJA».
      </p>
      <p style="margin:8px 0 0;font-size:10px;color:#bdc3c7;">
-      © ${new Date().getFullYear()} REHABILITACION ENERGETICA I S A M A R T, SL · Tel: 615 469 845
+      © ${new Date().getFullYear()} REHABILITACION ENERGETICA I S A M A R T, SL. Todos los derechos reservados.
      </p>
     </td>
    </tr>
@@ -308,7 +308,7 @@ async function sendInfoRequestAck(contact, convTitulo) {
     </p>
     <p style="margin:14px 0 0;font-size:13px;color:#95a5a6;line-height:1.5;">
       Si tiene cualquier urgencia puede contactarnos directamente:<br>
-      📞 <a href="tel:+34615469845" style="color:#e67e22;">615 469 845</a> &nbsp;|&nbsp;
+      // 📞 <a href="tel:+34615469845" style="color:#e67e22;">615 469 845</a> &nbsp;|&nbsp;
       ✉ <a href="mailto:contacto@isamart.es" style="color:#e67e22;">contacto@isamart.es</a>
     </p>
     ${btn(HOME_URL + '/mapa-ayudas/', 'Ver el Mapa de Ayudas →')}`;
