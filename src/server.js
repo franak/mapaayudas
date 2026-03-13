@@ -36,6 +36,7 @@ app.get('/confirm', (req, res) => {
 // ── Fallback → frontend ──────────────────────────────────────────────────────
 app.get('*', (req, res, next) => {
   if (req.path.startsWith('/excel') || req.path === '/health' || req.path === '/confirm') return next();
+  if (req.path.startsWith('/landing')) return next(); // Allow micro-apps to be served
   res.sendFile(path.join(PUBLIC_DIR, 'index.html'));
 });
 
