@@ -17,6 +17,12 @@ const router = express.Router();
 
 const RESERVED_PARAMS = new Set(['sheet', 'nocache', 'url', 'file', 'source']);
 
+// ── Middleware: Garantizar que siempre respondemos con JSON ──────────────────
+router.use((req, res, next) => {
+  res.setHeader('Content-Type', 'application/json; charset=utf-8');
+  next();
+});
+
 function extractFilters(query) {
   const filters = {};
   for (const [key, value] of Object.entries(query)) {
@@ -503,6 +509,24 @@ router.post('/info-request', async (req, res, next) => {
   } catch (err) {
     next(err);
   }
+});
+
+// ── Error handler para rutas /excel ──────────────────────────────────────────
+router.use((err, req, res, next) => {
+  // Ensure JSON response
+  res.setHeader('Content-Type', 'application/json; charset=utf-8');
+  
+  const status = err.statusCode || err.status || 500;
+  const isProd = process.env.NODE_ENV === 'production';
+
+  console.error(`[/excel ERROR] ${req.method} ${req.url} - ${err.message}`);
+  if (!isProd && err.stack) console.error(err.stack);
+
+  res.status(status).json({
+    ok: false,
+    error: err.message || 'Error procesando la solicitud',
+    code: err.code || 'EXCEL_ERROR',
+  });
 });
 
 module.exports = router;

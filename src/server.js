@@ -40,6 +40,15 @@ app.get('*', (req, res, next) => {
   res.sendFile(path.join(PUBLIC_DIR, 'index.html'));
 });
 
+// ── Catch unhandled routes for /excel (POST, DELETE, etc.) ─────────────────
+app.use('/excel', (req, res) => {
+  res.status(404).json({ 
+    error: 'Endpoint not found',
+    method: req.method,
+    path: req.path
+  });
+});
+
 // ── 404 ──────────────────────────────────────────────────────────────────────
 app.use((_req, res) => res.status(404).json({ error: 'Route not found' }));
 
@@ -56,12 +65,16 @@ validateEnv();
 
 // ── Error handler ────────────────────────────────────────────────────────────
 app.use((err, req, res, _next) => {
-  const status = err.statusCode || 500;
+  // Always set JSON content type
+  res.setHeader('Content-Type', 'application/json; charset=utf-8');
+  
+  const status = err.statusCode || err.status || 500;
   const isProd = process.env.NODE_ENV === 'production';
 
   console.error(`[ERROR] ${req.method} ${req.url} - ${err.message}`);
   if (!isProd && err.stack) console.error(err.stack);
 
+  // Ensure we always return JSON
   res.status(status).json({
     ok: false,
     error: err.message || 'Error interno del servidor',
